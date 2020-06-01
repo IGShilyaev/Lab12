@@ -5,10 +5,21 @@ using System.Text;
 
 namespace Lab12
 {
-    class MyFindTree<T>: IEnumerable<T>
-        where T: IComparable
+    class MyFindTree<T> : IEnumerable<T>
+        where T : IComparable
     {
-        public PointFindTree<T> root = null; 
+        public PointFindTree<T> root;
+
+        public int Count
+            {
+            get { int i = 0;  foreach (T x in this) i++; return i; }
+            }
+
+
+        public MyFindTree()
+        {
+            root = null;
+        }
 
         public MyFindTree(params T[] arr)
         {
@@ -110,4 +121,3 @@ namespace Lab12
     }
 
 }
-
