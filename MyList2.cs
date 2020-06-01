@@ -106,15 +106,33 @@ namespace Lab12
             beg = temp;
         }
 
+        public void AddtoEnd(T d)
+        {
+            Point<T> temp = new Point<T>(d);
+            if(beg == null)
+            {
+                beg = temp;
+                return;
+            }
+            Point<T> p = End;
+            p.next = temp;
+            temp.pred = p;
+        }
+
         public void AddtoPosition(T d, int position)
         {
             int i = 1;
             Point<T> temp = new Point<T>(d);
-            Point<T> p = beg;
-            while (i != position - 1 && p.next != null) { i++; p = p.next; }
-            if (i < position - 1) Console.WriteLine("Невозможно добавить элемент на заданную позицию");
-            else if (p.next == null) { temp.pred = p; p.next = temp;}
+            Point<T> p = Beg;
+            while (i != position && p.next != null) { i++; p = p.next; }
+            if (i == position - 1) { this.AddtoEnd(temp.data); return; }
+            if (i == 1){ this.AddtoBegin(temp.data); return; }
+            
+            p = p.pred;
+            if (i < position) Console.WriteLine("Невозможно добавить элемент на заданную позицию");
+            else if (p.next == null) { temp.pred = p; p.next = temp; }
             else { p.next.pred = temp; temp.next = p.next; temp.pred = p; p.next = temp; }
+            
         }
 
         public void RemoveKey(T key)
