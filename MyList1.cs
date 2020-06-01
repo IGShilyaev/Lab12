@@ -8,7 +8,7 @@ namespace Lab12
 {
     class MyList1<T>: IEnumerable<T>
     {
-        Point<T> beg = null;
+        Point<T> beg;
 
         #region numerator
         class Numerator1<T>: IEnumerator<T>
@@ -125,7 +125,7 @@ namespace Lab12
             Point<T> p = beg;
             while (p != null)
             {
-                Console.WriteLine(p);
+                Console.WriteLine(p.ToString());
                 p = p.next;
             }
         }
