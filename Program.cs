@@ -24,7 +24,7 @@ namespace Lab12
             list1.PrintList();
 
             Organization delete = null;
-            foreach (Organization x in list1) if (x.Founded % 2 == 0) delete =(Organization) x.Clone();
+            foreach (Organization tekOrg in list1) if (tekOrg.Founded % 2 == 0) delete = (Organization)tekOrg.Clone();
             if (delete != null) list1.RemoveKey(delete);
             else Console.WriteLine("В коллекции не было найдено четных элементов");
 
@@ -64,21 +64,26 @@ namespace Lab12
             Console.WriteLine("Сформированное идеально сбалансированное дерево:");
             idealTree.Show();
 
+            Console.WriteLine($"В дереве {idealTree.Count} элементов");
+
             Organization min = null;
-            int minValue = 2021; 
-            foreach(Organization x in idealTree) if(x.Founded<minValue) { minValue = x.Founded; min = x; }
+            int minValue = 2021;
+            foreach (Organization tekOrg in idealTree) if (tekOrg.Founded < minValue) { minValue = tekOrg.Founded; min = tekOrg; }
             Console.WriteLine("Минимальный элемент в дереве:");
             min.Show();
 
+            Console.WriteLine();
             MyFindTree<Organization> findTree = new MyFindTree<Organization>();
             findTree.root = new PointFindTree<Organization>(idealTree.root.data);
-            foreach (Organization x in idealTree) findTree.Add(findTree.root, x);
+            foreach (Organization tekOrg in idealTree) findTree.Add(findTree.root, tekOrg);
             Console.WriteLine("Дерево поиска, сформированное на основе идеально сбалансированного");
             findTree.Show();
 
+            Console.WriteLine($"В дереве поиска {findTree.Count} элементов");
+
             min = null;
             minValue = 2021;
-            foreach(Organization x in findTree) if (x.Founded < minValue) { minValue = x.Founded; min = x; }
+            foreach (Organization tekOrg in findTree) if (tekOrg.Founded < minValue) { minValue = tekOrg.Founded; min = tekOrg; }
             Console.WriteLine("Минимальный элемент в дереве:");
             min.Show();
 
@@ -92,37 +97,50 @@ namespace Lab12
             #region CircListDemo
             CircList<Organization> cList = new CircList<Organization>();
             cList.PrintList();
+            if (cList.Contains((Organization)org2.Clone())) Console.WriteLine($"Элемент {org2.Name} найден");
+            else Console.WriteLine($"Элемент {org2.Name} не найден");
+
+            Console.WriteLine();
             cList.AddtoBegin(org1);
             cList.PrintList();
             cList.AddtoEnd(sp);
+            cList.PrintList();
+            if (cList.Contains((Organization)org2.Clone())) Console.WriteLine($"Элемент {org2.Name} найден");
+            else Console.WriteLine($"Элемент {org2.Name} не найден");
 
+
+            Console.WriteLine();
             Organization[] mass2 = { org2, lib };
             cList.AddtoBegin(mass2);
             cList.PrintList();
-            cList.RemoveKey(sp);
+            if (cList.Contains((Organization)org2.Clone())) Console.WriteLine($"Элемент {org2.Name} найден");
+            else Console.WriteLine($"Элемент {org2.Name} не найден");
 
+            Console.WriteLine();
+            cList.RemoveKey(sp);
             cList.PrintList();
             Console.WriteLine($"Количество элементов в списке = {cList.Length}");
             Console.WriteLine($"Первый элемент списка: {cList.Beg}");
             Console.WriteLine($"Последний элемент списка: {cList.End}");
 
-            CircList<Organization> cloneList = (CircList<Organization>) cList.Clone();
-            foreach (Organization x in cloneList) x.Name += "CLONED";
-
+            Console.WriteLine();
+            CircList<Organization> cloneList = (CircList<Organization>)cList.Clone();
+            foreach (Organization tekOrg in cloneList) tekOrg.Name += "-CLONED";
             cloneList.PrintList();
             Console.WriteLine();
             cList.PrintList();
             Console.WriteLine();
 
-            cList = new CircList<Organization>(cloneList);
+            cList = new CircList<Organization>(arr); //{ org1, org2, lib, sp }
+            cList.PrintList();
+            Organization x = new Organization();
+            Organization[] finArr = { sp, x, org1 };
+            cList.RemoveKey(finArr);
             cList.PrintList();
             Console.WriteLine();
 
-            cList = new CircList<Organization>(arr);
-            cList.PrintList();
-
             cList = null;
-            cList = null;
+            cloneList = null;
 
             Console.WriteLine("Кольцевые списки удалены из памяти, для завершения работы нажмите Enter");
             #endregion
