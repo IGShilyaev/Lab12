@@ -7,24 +7,35 @@ namespace Lab12
 {
     class MyIdealTree<T>: IEnumerable<T>
     {
-        public PointIdealTree<T> root = null;
+        public PointIdealTree<T> root;
+        private static int i;
+
+        public int Count
+        {
+            get { int i = 0; foreach (T x in this) i++; return i; }
+
+        }
 
         public MyIdealTree(params T[] arr)
         {
             root = new PointIdealTree<T>(arr[0]);
-            IdealTree(arr.Length, root, 0, arr);
+            i = 1;
+            IdealTree(arr.Length, root, arr);
         }
 
-        static PointIdealTree<T> IdealTree(int size, PointIdealTree<T> p, int i, params T[] arr)
+        static PointIdealTree<T> IdealTree(int size, PointIdealTree<T> p, params T[] arr)
         {
-            PointIdealTree<T> r;
-            int nl, nr;
             if (size == 0) { p = null; return p; }
-            nl = size / 2; nr = size - nl - 1; i++;
-            r = new PointIdealTree<T>(arr[i]);
-            r.left = IdealTree(nl, r.left, i, arr);
-            r.right = IdealTree(nr, r.right, i, arr);
-            return r;
+            int nl, nr;
+            nl = size / 2; nr = size - nl - 1;
+            if (p == null)
+            {
+                p = new PointIdealTree<T>(arr[i]);
+                i++;
+            }
+            p.left = IdealTree(nl, p.left, arr);
+            p.right = IdealTree(nr, p.right, arr);
+            return p;
         }
 
         static void ShowTree(PointIdealTree<T> p, int l)
@@ -96,8 +107,5 @@ namespace Lab12
 
             }
         }
-
-
-
     }
 }
