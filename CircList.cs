@@ -7,8 +7,9 @@ using System.Text;
 namespace Lab12
 {
     class CircList<T>: IEnumerable<T>, ICloneable, IDisposable
+        where T: ICloneable
     {
-        Point<T> beg = null;
+        Point<T> beg;
 
         public int Length
         {
@@ -68,8 +69,7 @@ namespace Lab12
 
         public CircList(params T[] mas)
         {
-            beg = new Point<T>();
-            beg.data = mas[0];
+            beg = new Point<T>(mas[0]);
             Point<T> p = beg;
             for (int i = 1; i < mas.Length; i++)
             {
@@ -85,7 +85,7 @@ namespace Lab12
 
         public CircList(CircList<T> c)
         {
-            foreach (T x in c) { AddtoEnd(x); }
+            foreach (T x in c) { AddtoEnd((T) x.Clone()); }
         }
 
         public void PrintList()
@@ -95,13 +95,14 @@ namespace Lab12
                 Console.WriteLine("Пустой список");
                 return;
             }
-            Console.WriteLine(beg);
+            Console.Write(beg);
             Point<T> p = beg.next;
             while (p != beg)
             {
-                Console.WriteLine(p);
+                Console.Write("; " + p);
                 p = p.next;
             }
+            Console.WriteLine();
         }
 
         public void AddtoEnd(T d)
@@ -110,12 +111,15 @@ namespace Lab12
             if (beg == null)
             {
                 beg = temp;
+                beg.next = beg;
+                beg.pred = beg;
                 return;
             }
-            beg.pred = temp;
+            Point<T> end = End;
+            end.next = temp;
+            temp.pred = end;
             temp.next = beg;
-            temp.pred = End;
-            End.next = temp;
+            beg.pred = temp;
 
         }
 
@@ -124,14 +128,17 @@ namespace Lab12
             Point<T> temp = new Point<T>(d);
             if (beg == null)
             {
+                temp.next = temp;
+                temp.pred = temp;
                 beg = temp;
                 return;
             }
+            Point<T> end = End;
             temp.next = beg;
+            temp.pred = end;
             beg.pred = temp;
+            end.next = temp;
             beg = temp;
-            beg.pred = End;
-            End.next = beg;
         }
 
         public void AddtoBegin(params T[] mass)
@@ -153,12 +160,7 @@ namespace Lab12
             }
             else for(int i = mass.Length-1; i>=0; i--)
                 {
-                    Point<T> temp = new Point<T>(mass[i]);
-                    temp.next = beg;
-                    beg.pred = temp;
-                    beg = temp;
-                    beg.pred = End;
-                    End.next = beg;
+                    AddtoBegin(mass[i]);
                 }
 
         }
@@ -180,28 +182,42 @@ namespace Lab12
 
             if (Length == 1 && !beg.data.Equals(key))
             {
-                Console.WriteLine("Элемента нет в списке");
+                Console.WriteLine($"Элемента {key} нет в списке");
                 return;
             }
 
             if (beg.data.Equals(key))
             {
-                beg.next.pred = null;
+                Point<T> end = End;
+                beg.next.pred = end;
                 beg = beg.next;
+                end.next = beg;
                 return;
             }
 
-            Point<T> p = beg;
-            while (p.next.next != null && !p.next.data.Equals(key)) p = p.next;
+            Point<T> p = beg.next;
+            while (p.next.next != beg && !p.next.data.Equals(key)) p = p.next;
 
             if (!p.next.data.Equals(key))
             {
-                Console.WriteLine("Элемента нет в списке");
+                Console.WriteLine($"Элемента {key} нет в списке");
                 return;
             }
 
             p.next.next.pred = p;
             p.next = p.next.next;
+        }
+
+        public void RemoveKey(params T[] arr)
+        {
+            foreach (T x in arr) RemoveKey((T)x.Clone());
+        }
+
+        public bool Contains(T key)
+        {
+            if (Length == 0) return false;
+            foreach (T x in this) if (key.Equals(x)) return true;
+            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
